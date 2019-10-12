@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 //汇率转换界面，目前的主要界面，主要程序
 //实现参数传值，myrate.xml文件存储和修改提供参数传值，线程，获取网络数据，解析网络数据
@@ -40,6 +44,7 @@ public class RateActivity extends AppCompatActivity implements Runnable{
     float dollar2=0f,euro2=0f,won2=0f;
     private final String TAG ="Rate";
     Handler handler;
+    String update;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +52,6 @@ public class RateActivity extends AppCompatActivity implements Runnable{
         rmb=findViewById(R.id.editText);
         mes=findViewById(R.id.textView6);
 
-        //开启子线程
-        Thread t=new Thread(this);
-        t.start();
         handler=new Handler(){
             public void handleMessage(Message msg){
                 if(msg.what==5){
@@ -61,6 +63,33 @@ public class RateActivity extends AppCompatActivity implements Runnable{
             }
         };
 
+        //每天更新
+        //获取当前系统时间
+        Date today= Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String todayStr=sdf.format(today);
+
+        //获取上次更新日期
+        SharedPreferences sharedPreferences=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+        PreferenceManager.getDefaultSharedPreferences(this);
+        update=sharedPreferences.getString("update_data","");
+
+        //判断时间
+        if(!todayStr.equals(update)){
+            Log.i(TAG,todayStr+"需要更新"+update);
+            Toast.makeText(this, "已更新", Toast.LENGTH_SHORT).show();
+            //开启子线程
+            Thread t=new Thread(this);
+            t.start();
+            //保存更新的日期
+            SharedPreferences sp=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor=sp.edit();
+            editor.putString("update_data",todayStr);
+            editor.apply();
+        }
+        else{
+            Log.i(TAG,"不需要更新");
+        }
     }
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
 
@@ -183,6 +212,7 @@ public class RateActivity extends AppCompatActivity implements Runnable{
             e.printStackTrace();
         }
         Log.i(TAG, "run" + doc.title());
+
         Elements tables = doc.getElementsByTag("table");
        // int i = 1;
 //        //查看需要的数据在第几个table

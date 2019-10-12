@@ -1,7 +1,5 @@
 package com.example.test;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,14 +18,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import static android.content.ContentValues.TAG;
 
-public class search extends ListActivity  implements Runnable {
+public class search extends AppCompatActivity implements Runnable {
     Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_search);
 //        List<String> list1 =new ArrayList<>();
 //        for(int i=1;i<100;i++){
 //            list1.add("item"+i);
@@ -39,8 +40,9 @@ public class search extends ListActivity  implements Runnable {
             public void handleMessage(Message msg) {
                 if (msg.what == 5) {
                     List<String> list2=(List<String>) msg.obj;
+                    ListView listView=(ListView)findViewById(R.id.mylist);//使用自定义list布局  不用extend ListActivity
                     ListAdapter adapter=new ArrayAdapter<String>(search.this,android.R.layout.simple_list_item_1,list2);
-                    setListAdapter(adapter);
+                    listView.setAdapter(adapter);
                 }
                 super.handleMessage(msg);
             }
