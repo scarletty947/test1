@@ -49,8 +49,17 @@
             android:id="@+id/button11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:background="#FFC107"
             android:onClick="onClick"
             android:text="save" />
+
+        <Button
+            android:id="@+id/button12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFC107"
+            android:onClick="onClick2"
+            android:text="@android:string/search_go" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
