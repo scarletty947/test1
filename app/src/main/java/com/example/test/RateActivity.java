@@ -41,7 +41,6 @@ public class RateActivity extends AppCompatActivity implements Runnable{
     TextView mes;
     String s;
     float dollar1=7.07f,euro1=7.89f,won1=0.0059f;
-    float dollar2=0f,euro2=0f,won2=0f;
     private final String TAG ="Rate";
     Handler handler;
     String update;
@@ -51,6 +50,12 @@ public class RateActivity extends AppCompatActivity implements Runnable{
         setContentView(R.layout.activity_rate);
         rmb=findViewById(R.id.editText);
         mes=findViewById(R.id.textView6);
+
+        SharedPreferences sharedPreferences=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+        PreferenceManager.getDefaultSharedPreferences(this);
+        dollar1=sharedPreferences.getFloat("dollar_rate_key",0.0f);
+        euro1=sharedPreferences.getFloat("euro_rate_key",0.0f);
+        won1=sharedPreferences.getFloat("won_rate_key",0.0f);
 
         handler=new Handler(){
             public void handleMessage(Message msg){
@@ -70,8 +75,6 @@ public class RateActivity extends AppCompatActivity implements Runnable{
         String todayStr=sdf.format(today);
 
         //获取上次更新日期
-        SharedPreferences sharedPreferences=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
-        PreferenceManager.getDefaultSharedPreferences(this);
         update=sharedPreferences.getString("update_data","");
 
         //判断时间
@@ -246,7 +249,12 @@ public class RateActivity extends AppCompatActivity implements Runnable{
                     break;
             }
             // 获取数据并返回 ……
-
+            SharedPreferences sp=getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor=sp.edit();
+            editor.putFloat("dollar_rate_key",dollar1);
+            editor.putFloat("euro_rate_key",euro1);
+            editor.putFloat("won_rate_key",won1);
+            editor.apply();
         }
     }
     public static String InputStream2String(InputStream in) {
