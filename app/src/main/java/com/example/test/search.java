@@ -1,7 +1,9 @@
 package com.example.test;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,10 +33,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static android.content.ContentValues.TAG;
 
-public class search extends AppCompatActivity implements Runnable,AdapterView.OnItemClickListener{
+public class search extends AppCompatActivity implements Runnable,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
     Handler handler;
     private final String TAG ="mylist";
     ListView listView;
+    MyAdapter myAdapter;
+    List listItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,7 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
 
                     String str,country,rate;
                     //自定义行布局以及动态数组对应
-                    List listItem=new ArrayList<HashMap<String,String>>();
+                    listItem=new ArrayList<HashMap<String,String>>();
                     for(int i=0;i<list2.size();i++){
                         HashMap<String,String> map=new HashMap<String, String>();
                         str=list2.get(i);
@@ -67,12 +71,15 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
                         map.put("ItemValue",rate);
                         listItem.add(map);
                     }
+                    //listItem=null;
 //                    ListAdapter listItemAdapter=new SimpleAdapter(search.this,listItem,R.layout.listitem_search,
 //                            new String[]{"ItemName","ItemValue"},new int[]{R.id.ItemName,R.id.ItemValue});//使用行布局里的控件设置
 //                    listView.setAdapter(listItemAdapter);
                     //自定义Adapter
-                    MyAdapter myAdapter=new MyAdapter(search.this,R.layout.listitem_search, (ArrayList<HashMap<String, String>>) listItem);
+                    myAdapter=new MyAdapter(search.this,R.layout.listitem_search, (ArrayList<HashMap<String, String>>) listItem);
                     listView.setAdapter(myAdapter);
+                    //当列表没有数据显示设置
+                    listView.setEmptyView(findViewById(R.id.nodata));
 
                 }
                 super.handleMessage(msg);
@@ -85,6 +92,8 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
         //list点击事件
         listView=(ListView)findViewById(R.id.mylist);
         listView.setOnItemClickListener(this);
+        //长按事件
+        listView.setOnItemLongClickListener(this);
     }
 
     public void run() {
@@ -155,5 +164,24 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
         compute.putExtra("rate",Float.parseFloat(value));
         startActivity(compute);
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("提示")
+                .setMessage("请确认是否删除当前数据")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG,"onClick:对话框事件");
+                        //删除数据项
+                        myAdapter.remove(listView.getItemAtPosition(position));
+                        //更新适配器
+                        //ArryAdapter会自动调用
+                    }
+                }).setNegativeButton("否",null);
+        builder.create().show();
+        return true;
     }
 }
