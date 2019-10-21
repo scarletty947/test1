@@ -62,11 +62,23 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
                     String str,country,rate;
                     //自定义行布局以及动态数组对应
                     listItem=new ArrayList<HashMap<String,String>>();
-                    for(int i=0;i<list2.size();i++){
+//                    for(int i=0;i<list2.size();i++){
+//                        HashMap<String,String> map=new HashMap<String, String>();
+//                        str=list2.get(i);
+//                        country=str.substring(0, str.indexOf("==>"));
+//                        rate=str.substring( str.indexOf("==>")+3);
+//
+//                        map.put("ItemName",country);
+//                        map.put("ItemValue",rate);
+//                        listItem.add(map);
+//                    }
+
+                    //数据库获取方式
+                    List<RateItem> list3=(List<RateItem>) msg.obj;
+                    for (RateItem i:list3){
                         HashMap<String,String> map=new HashMap<String, String>();
-                        str=list2.get(i);
-                        country=str.substring(0, str.indexOf("==>"));
-                        rate=str.substring( str.indexOf("==>")+3);
+                        country=i.getCurName();
+                        rate=i.getCurRate();
                         map.put("ItemName",country);
                         map.put("ItemValue",rate);
                         listItem.add(map);
@@ -101,39 +113,46 @@ public class search extends AppCompatActivity implements Runnable,AdapterView.On
         //获取msg对象，用于返回主线程
         Message msg = handler.obtainMessage(5);
 
-        List<String> list1 =new ArrayList<>();
-        Document doc = null;
-        try {
-            doc = Jsoup.connect("http://www.usd-cny.com/icbc.htm").get();
-            //doc = Jsoup.parse(html);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, "run" + doc.title());
-        Elements tables = doc.getElementsByTag("table");
-        // int i = 1;
-//        //查看需要的数据在第几个table
-//        for (Element table : tables) {
-//            Log.i(TAG, "run:table[" + i + "]" + table);
-//            i++;
+//        List<String> list1 =new ArrayList<>();
+//        Document doc = null;
+//        try {
+//            doc = Jsoup.connect("http://www.usd-cny.com/icbc.htm").get();
+//            //doc = Jsoup.parse(html);
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-        Element table = tables.get(0);
-        // 获取 TD 中的数据
-        Elements trs = table.getElementsByTag("tr ");
-        for (int k=1;k<trs.size();k++) {
-            Log.i(TAG, "run:tr=" + trs.get(k));
-            Elements tds = trs.get(k).getElementsByTag("td ");
-//            i=0;
-//            for (Element td : tds) {
-//                Log.i(TAG, "run:td[" + i + "]" + td);
-//                i++;
-//            }
-            String country = tds.get(0).text();
-            Float dollar = Float.parseFloat(tds.get(4).text());
-            // 获取数据并返回 ……
-            list1.add(country+"==>"+dollar);
+//        Log.i(TAG, "run" + doc.title());
+//        Elements tables = doc.getElementsByTag("table");
+//        // int i = 1;
+////        //查看需要的数据在第几个table
+////        for (Element table : tables) {
+////            Log.i(TAG, "run:table[" + i + "]" + table);
+////            i++;
+////        }
+//        Element table = tables.get(0);
+//        // 获取 TD 中的数据
+//        Elements trs = table.getElementsByTag("tr ");
+//        for (int k=1;k<trs.size();k++) {
+//            Log.i(TAG, "run:tr=" + trs.get(k));
+//            Elements tds = trs.get(k).getElementsByTag("td ");
+////            i=0;
+////            for (Element td : tds) {
+////                Log.i(TAG, "run:td[" + i + "]" + td);
+////                i++;
+////            }
+//            String country = tds.get(0).text();
+//            Float dollar = Float.parseFloat(tds.get(4).text());
+//            // 获取数据并返回 ……
+//            list1.add(country+"==>"+dollar);
+//        }
+
+        //改编成数据库版本查询所有数据
+        RateManager manager=new RateManager(this);
+        List<RateItem> testList=manager.listALL();
+        for (RateItem i:testList){
+            Log.i(TAG,"onOptionItemSelected:取出数据[id="+i.getId()+"]Name="+i.getCurName()+"Rate="+i.getCurRate());
         }
-        msg.obj=list1;
+        msg.obj=testList;
         handler.sendMessage(msg);
     }
 

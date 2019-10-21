@@ -73,10 +73,12 @@ public class RateActivity extends AppCompatActivity implements Runnable{
         Date today= Calendar.getInstance().getTime();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         String todayStr=sdf.format(today);
-
+        Log.i(TAG,todayStr);
+        //测试用
+       // todayStr="2019-10-10";
         //获取上次更新日期
         update=sharedPreferences.getString("update_data","");
-
+        Log.i(TAG,update);
         //判断时间
         if(!todayStr.equals(update)){
             Log.i(TAG,todayStr+"需要更新"+update);
@@ -113,7 +115,7 @@ public class RateActivity extends AppCompatActivity implements Runnable{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.new_friends){
+        if(item.getItemId()==R.id.settings){
             //...
         }
         return super.onOptionsItemSelected(item);
@@ -226,6 +228,9 @@ public class RateActivity extends AppCompatActivity implements Runnable{
         Element table = tables.get(0);
         // 获取 TD 中的数据
         Elements trs = table.getElementsByTag("tr ");
+
+        RateItem item1;
+        RateManager manager=new RateManager(this);
         for (int k=1;k<trs.size();k++) {
             Log.i(TAG, "run:tr=" + trs.get(k));
             Elements tds = trs.get(k).getElementsByTag("td ");
@@ -234,6 +239,7 @@ public class RateActivity extends AppCompatActivity implements Runnable{
 //                Log.i(TAG, "run:td[" + i + "]" + td);
 //                i++;
 //            }
+
             String country = tds.get(0).text();
             switch (country) {
                 case "美元":
@@ -255,6 +261,10 @@ public class RateActivity extends AppCompatActivity implements Runnable{
             editor.putFloat("euro_rate_key",euro1);
             editor.putFloat("won_rate_key",won1);
             editor.apply();
+
+            //写入数据库
+            item1=new RateItem(country,tds.get(4).text());
+            manager.add(item1);
         }
     }
     public static String InputStream2String(InputStream in) {
