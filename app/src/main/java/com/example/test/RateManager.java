@@ -79,6 +79,7 @@ public class RateManager {
         values.put("curname",item.getCurName());
         values.put("currate",item.getCurRate());
         db.update(TBNAME,values,"ID=?",new String[]{String.valueOf(item.getId())});
+        db.close();
     }
     //删除一条记录
     public void  delete(int id){

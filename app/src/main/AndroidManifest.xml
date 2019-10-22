@@ -12,7 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".gridView"/>
+        <activity android:name=".fragment">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".gridView" />
         <activity android:name=".newCompute" />
         <activity android:name=".search" />
         <activity android:name=".RateActivity">
