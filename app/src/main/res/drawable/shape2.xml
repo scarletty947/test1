@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="90"
+        android:endColor="#11777777"
+        android:startColor="#FF000000"
+        />
+    <!-- shape文件设置按钮组背景颜色和选中背景色
+    渐变处理  shape2和shape3颜色方向相反-->
+</shape>

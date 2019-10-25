@@ -23,11 +23,6 @@
         <activity android:name=".newCompute" />
         <activity android:name=".search" />
         <activity android:name=".RateActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".save" />
         <activity android:name=".twogroupActivity" />
