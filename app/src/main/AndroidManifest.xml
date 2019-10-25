@@ -12,18 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".fragment">
+        <activity android:name=".viewPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".fragment">
+        </activity>
         <activity android:name=".gridView" />
         <activity android:name=".newCompute" />
         <activity android:name=".search" />
-        <activity android:name=".RateActivity">
-        </activity>
+        <activity android:name=".RateActivity"></activity>
         <activity android:name=".save" />
         <activity android:name=".twogroupActivity" />
         <activity android:name=".MainActivity" />

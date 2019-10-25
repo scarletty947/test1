@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 public class FuncFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.frame_func, container);
+        return inflater.inflate(R.layout.frame_func, null);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
